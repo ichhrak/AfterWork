@@ -1,0 +1,51 @@
+/* src/components/Login.css */
+.login-container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.login-title {
+  font-size: 2.5rem;
+}
+
+.login-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form label {
+  margin: 10px 0;
+}
+
+.login-input {
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-input:focus {
+  outline: none;
+}
+
+.login-button {
+  margin-top: 20px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
