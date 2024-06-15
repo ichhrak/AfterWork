@@ -1,43 +1,49 @@
 import React, { useState } from "react";
-import {useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "./login.css";
 
 export default function Login() {
-  const { t } = useTranslation(); // Hook to access translations
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Hardcoded access credentials
-    const customerEmail = "customer";
-    const cpPassword = "password";
-    const posterEmail = "poster";
 
-    if (email == customerEmail && password == cpPassword) {
-      setSuccessMessage(t("login_success"));
-      setTimeout(() => {
-        navigate("/Customer");
-      }, 1000);
-    } else if (email == posterEmail && password == cpPassword)  {
-      setSuccessMessage(t("login_success"));
-      setTimeout(() => {
-        navigate("/Poster");
-      }, 1000);
-    }
-    else {
-      setErrorMessage(t("invalid_credentials"));
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSuccessMessage(t("login_success"));
+        setTimeout(() => {
+          if (email === 'customer') {
+            navigate("/Customer");
+          } else if (email === 'poster') {
+            navigate("/Poster");
+          }
+        }, 1000);
+      } else {
+        setErrorMessage(t("invalid_credentials"));
+      }
+    } catch (error) {
+      setErrorMessage(t("error_occurred"));
     }
   };
 
   return (
     <div className="login">
       <span className="loginTitle">{t("login")}</span>
-      <form className="loginForm">
+      <form className="loginForm" onSubmit={handleLogin}>
         <label>{t("email")}</label>
         <input
           className="loginInput"
@@ -54,7 +60,7 @@ export default function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button className="loginButton" onClick={handleLogin}>
+        <button className="loginButton" type="submit">
           {t("login")}
         </button>
       </form>
